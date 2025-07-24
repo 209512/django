@@ -1,0 +1,21 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Todo List</h1>
+        <ul>
+            {% for todo in data %}
+                <li><a href="{% url 'todo_info' todo.id %}">{{ todo.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

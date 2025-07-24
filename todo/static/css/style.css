@@ -1,0 +1,52 @@
+/* todo_list.html */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+    text-align: center;
+    color: #333;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+li {
+    padding: 10px;
+    margin: 5px 0;
+    background: #eaeaea;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+li:hover {
+    background: #d4d4d4;
+}
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+/* --- todo_info.html 추가 --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* 테이블, 위 요소 간격 */
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background: #f0f0f0;
+}
