@@ -1,0 +1,30 @@
+.
+├── config
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── manage.py
+├── poetry.lock
+├── project_structure.txt
+├── pyproject.toml
+├── templates
+│   ├── todo_info.html
+│   └── todo_list.html
+└── todo
+    ├── __init__.py
+    ├── admin.py
+    ├── apps.py
+    ├── migrations
+    │   ├── __init__.py
+    │   ├── 0001_initial.py
+    │   └── 0002_rename_is_complete_todo_is_completed_and_more.py
+    ├── models.py
+    ├── static
+    │   └── css
+    │       └── style.css
+    ├── tests.py
+    └── views.py
+
+7 directories, 21 files
