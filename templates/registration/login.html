@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="{%  static 'css/base_users.css' %}">    <link rel="stylesheet" href="{%  static 'css/login.css' %}">
+    <link rel="stylesheet" href="{%  static 'css/login.css' %}">
+</head>
+<body>
+    <div class="login-page-container">
+        <div class="form-container-base login-box">
+            <h2 class="form-title">Login</h2>
+            <form method="POST">
+                {%  csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="submit-button">Login</button>
+                <span class="signup-link-span">
+                    아직 회원이 아니면 회원가입을 진행해주세요.
+                    <a href="{% url 'signup' %}">회원가입</a>
+                </span>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
