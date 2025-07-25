@@ -1,0 +1,5 @@
+/* base_users.css 로드 후 signup.css 적용 */
+
+.signup-page-container { /* HTML .container에 적용될 새로운 클래스 */
+    margin: 50px auto; /* 중앙 정렬을 위한 마진 */
+}
