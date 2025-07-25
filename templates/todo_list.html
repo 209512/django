@@ -1,21 +1,41 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base_todo.css' %}">
+    <link rel="stylesheet" href="{% static 'css/todo_list.css' %}">
 </head>
 <body>
-    <div class="container">
-        <h1>Todo List</h1>
+    <nav>
+        {% if request.user.is_authenticated %}
+            <div class="nav-controls">
+            {{ request.user.username }}
+            <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button>Logout</button>
+            </form>
+            </div>
+        {% else %}
+            <div class="nav-links">
+                <a href="{% url 'signup' %}">SignUp</a>
+                <a href="{% url 'login' %}">Login</a>
+            </div>
+        {%  endif %}
+    </nav>
+    <div class="container todo-list-page">
+        {% if request.user.is_authenticated %}
+        <h1>{{ request.user.username }}의 Todo List</h1>
         <ul>
             {% for todo in data %}
-                <li><a href="{% url 'todo_info' todo.id %}">{{ todo.title }}</a></li>
+                <li><a href="{% url 'todo_info' todo.id %}">{{ todo.title }}</a> </li>
             {% endfor %}
         </ul>
+        {% else %}
+            <p><strong>회원가입</strong>이나 <strong>로그인</strong>을 진행해주세요.</p>
+        {% endif %}
     </div>
 </body>
 </html>

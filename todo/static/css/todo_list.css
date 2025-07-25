@@ -1,0 +1,33 @@
+/* 네비게이션바 */
+nav {
+    margin-bottom: 20px;
+}
+nav .nav-controls { /* 로그인 시 표시되는 사용자 이름, 로그아웃 버튼 영역 */
+    text-align: right;
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+nav .nav-links { /* 로그아웃 시 표시되는 SignUp, Login 링크 영역 */
+    display: flex;
+    justify-content: right;
+    font-size: 20px;
+}
+nav .nav-links a {
+    margin-right: 10px; /* SignUp 링크에만 적용 */
+}
+nav button {
+    border: 0;
+    font-size: 20px;
+    background: none; /* 버튼 배경 제거 */
+    cursor: pointer;
+    color: #007bff; /* 버튼 색상 */
+}
+nav button:hover {
+    text-decoration: underline;
+}
+
+/* todo_list.html container 추가 마진 (기존 인라인 스타일) */
+.container.todo-list-page { /* 컨테이너 클래스에 추가된 스타일 */
+    margin-top: 15px;
+}
