@@ -1,0 +1,16 @@
+/* 입력 필드 기본 스타일 */
+input[type="text"],
+input[type="date"],
+textarea {
+    width: calc(100% - 22px); /* 패딩, 보더 고려한 너비 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    box-sizing: border-box; /* 패딩, 보더를 너비에 포함 */
+}
+
+/* 폼 단락 (p 태그) 스타일 */
+form p {
+    margin: 10px 0;
+}

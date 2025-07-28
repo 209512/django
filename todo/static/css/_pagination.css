@@ -1,0 +1,30 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a, .pagination span, .pagination p {
+    color: #007bff;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border-radius: 5px; /* 둥근 모서리 */
+    margin: 0 4px; /* 페이지 번호 간 간격 */
+}
+
+.pagination p { /* 비활성화된 버튼 */
+    color: gray;
+    cursor: not-allowed;
+    background-color: #f0f0f0;
+}
+
+.pagination a.active, /* 현재 활성화된 페이지 */
+.pagination span.current-page { /* 현재 페이지 번호 스타일을 span으로 변경 */
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}

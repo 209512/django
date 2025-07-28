@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="{% static 'css/base_todo.css' %}">
+    <link rel="stylesheet" href="{% static 'css/_buttons.css' %}"> {# 버튼 공통 스타일 추가 #}
+    <link rel="stylesheet" href="{% static 'css/_forms.css' %}"> {# 폼 공통 스타일 추가 #}
+    <link rel="stylesheet" href="{% static 'css/_pagination.css' %}"> {# 페이지네이션 공통 스타일 추가 #}
+    {% block extra_css %}{% endblock %} {# 각 페이지별 추가 CSS 블록 #}
+</head>
+<body>
+    <nav>
+        <a href="{% url 'todo_list' %}" class="home-link">Home</a> {# Home 링크에 클래스 추가 #}
+        {% if request.user.is_authenticated %}
+            <div class="nav-controls">
+                <span>{{ request.user.username }}</span>
+                <form action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="nav-links">
+                <a href="{% url 'signup' %}">SignUp</a>
+                <a href="{% url 'login' %}">Login</a>
+            </div>
+        {% endif %}
+    </nav>
+    <div class="main-content"> {# 콘텐츠 감싸는 새로운 div 추가 #}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{% extends 'todo/base.html' %}
+{% load static %} {# static 태그가 이미 base.html에 있지만, 명시적으로 추가해도 무방 #}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/todo_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container todo-list-page">
+    {% if request.user.is_authenticated %}
+    <div class="todo-list-header">
+        <h1>{{ request.user.username }}'s Todo List</h1>
+        <button class="btn-primary" onclick="location.href='{% url 'todo_create' %}'">생성하기</button>
+    </div>
+    <form method="GET" class="search-form">
+        <input type="text" placeholder="제목 또는 내용을 입력하세요." name="q" value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+        <button type="submit" class="btn-primary">Search</button>
+    </form>
+    <ul>
+        {% for todo in page_obj.object_list %}
+            <li><a href="{% url 'todo_info' todo.id %}">{{ todo.title }}</a></li>
+        {% endfor %}
+    </ul>
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; First</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
+        {% else %}
+            <p>&laquo; First</p>
+            <p>Previous</p>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                {% if num == page_obj.number %}
+                    <span class="current-page">{{ num }}</span> {# active 대신 current-page 클래스 사용 #}
+                {% else %}
+                    <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Last &raquo;</a>
+        {% else %}
+            <p>Next</p>
+            <p>Last &raquo;</p>
+        {% endif %}
+    </div>
+    {% else %}
+        <p><strong>회원가입</strong>이나 <strong>로그인</strong>을 진행해주세요.</p>
+    {% endif %}
+</div>
+{% endblock %}

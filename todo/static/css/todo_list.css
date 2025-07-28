@@ -1,33 +1,28 @@
-/* 네비게이션바 */
-nav {
-    margin-bottom: 20px;
-}
-nav .nav-controls { /* 로그인 시 표시되는 사용자 이름, 로그아웃 버튼 영역 */
-    text-align: right;
-    font-size: 20px;
-    display: flex;
-    justify-content: space-between;
-}
-nav .nav-links { /* 로그아웃 시 표시되는 SignUp, Login 링크 영역 */
-    display: flex;
-    justify-content: right;
-    font-size: 20px;
-}
-nav .nav-links a {
-    margin-right: 10px; /* SignUp 링크에만 적용 */
-}
-nav button {
-    border: 0;
-    font-size: 20px;
-    background: none; /* 버튼 배경 제거 */
-    cursor: pointer;
-    color: #007bff; /* 버튼 색상 */
-}
-nav button:hover {
-    text-decoration: underline;
+/* Todo List 페이지 컨테이너에 추가 마진 */
+.container.todo-list-page {
+    margin-top: 15px;
 }
 
-/* todo_list.html container 추가 마진 (기존 인라인 스타일) */
-.container.todo-list-page { /* 컨테이너 클래스에 추가된 스타일 */
-    margin-top: 15px;
+/* 제목, 생성 버튼 정렬 */
+.todo-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-bottom: 15px;
+}
+
+/* 검색 폼 */
+.search-form {
+    display: flex;
+    margin: 10px 0 20px 0; /* 위아래 여백 */
+}
+
+.search-form input[type="text"] {
+    flex-grow: 1; /* 너비 유연하게 채움 */
+    margin-right: 10px; /* 검색 버튼과의 간격 */
+    margin-bottom: 0; /* _forms.css의 margin-bottom 제거 */
+}
+
+.search-form .btn-primary { /* 검색 버튼에 btn-primary 클래스 적용 */
+    flex-shrink: 0; /* 너비가 줄어들지 않게 함 */
 }
