@@ -1,0 +1,43 @@
+/* 기본 버튼 스타일 */
+button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+/* 네비게이션 바 버튼 (로그아웃 버튼) */
+nav button {
+    background: none;
+    color: #007bff;
+    padding: 0; /* 기본 패딩 제거 */
+    font-size: 20px;
+    margin-left: 15px; /* 사용자 이름과 간격 */
+}
+
+nav button:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+/* 주황색 버튼 (생성, 수정 버튼) */
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* 빨간색 버튼 (삭제 버튼) */
+.btn-danger {
+    background-color: #dc3545; /* 빨간색 */
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}

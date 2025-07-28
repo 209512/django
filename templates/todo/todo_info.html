@@ -1,0 +1,28 @@
+{% extends 'todo/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/todo_info.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="todo-info-header">
+        <h1>{{ todo.title }}</h1>
+        <div class="button-group-container">
+            <button class="btn-primary" onclick="location.href='{% url 'todo_update' todo.id %}'">수정하기</button>
+            <button class="btn-danger" onclick="location.href='{% url 'todo_delete' todo.id %}'">삭제하기</button>
+        </div>
+    </div>
+    <table>
+        {% for key, value in todo.items %}
+            {% if key != 'title' and key != 'id' and key != 'user_id' and key != '_state'%}
+                <tr>
+                    <th>{{ key|capfirst }}</th>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
