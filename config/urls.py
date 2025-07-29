@@ -31,4 +31,5 @@ urlpatterns = [
     path('todo/create/', todo_create, name='todo_create'),
     path('todo/<int:todo_id>/update/', todo_update, name='todo_update'),
     path('todo/<int:todo_id>/delete/', todo_delete, name='todo_delete'),
+    path('cbv/', include('todo.urls')),
 ]
