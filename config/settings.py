@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 
 # login / logout
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/todo/' # 로그인 후에 To Do List 페이지로 이동
+LOGIN_REDIRECT_URL = '/cbv/todo/' # 로그인 후에 To Do List 페이지로 이동
 LOGOUT_REDIRECT_URL = '/accounts/login/' # 로그아웃 시 로그인 페이지로 이동
 
 MIDDLEWARE = [

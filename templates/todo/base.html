@@ -13,7 +13,7 @@
 </head>
 <body>
     <nav>
-        <a href="{% url 'todo_list' %}" class="home-link">Home</a> {# Home 링크에 클래스 추가 #}
+        <a href="{% url 'cbv_todo_list' %}" class="home-link">Home</a> {# Home 링크에 클래스 추가 #}
         {% if request.user.is_authenticated %}
             <div class="nav-controls">
                 <span>{{ request.user.username }}</span>
