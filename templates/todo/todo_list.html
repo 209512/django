@@ -1,63 +1,59 @@
 {% extends 'todo/base.html' %}
 {% load static %}
 
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/todo_list.css' %}">
-{% endblock %}
+{% block title %}할 일 목록{% endblock %}
 
 {% block content %}
-<div class="container todo-list-page">
-    {% if request.user.is_authenticated %}
-    <div class="todo-list-header">
-    {% if not request.user.is_staff %}
-        <h1>{{ request.user.username }}'s Todo List</h1>
-    {% else %}
-        <h1>All To Do List (By. Admin)</h1>
-    {% endif %}
-        <button class="btn-primary" onclick="location.href='{% url 'cbv_todo_create' %}'">생성하기</button>
-    </div>
-    <form method="GET" class="search-form">
-        <input type="text" placeholder="제목 또는 내용을 입력하세요." name="q" value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
-        <button type="submit" class="btn-primary">Search</button>
-    </form>
-    <ul>
-        {% for todo in page_obj.object_list %}
-            <li><a href="{% url 'cbv_todo_info' todo.id %}">
-                {% if request.user.is_superuser %}
-                    [{{ todo.user.username }}]
-                {% endif %}
-                {{ todo.title }}</a></li>
-        {% endfor %}
-    </ul>
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; First</a>
-            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Previous</a>
-        {% else %}
-            <p>&laquo; First</p>
-            <p>Previous</p>
-        {% endif %}
-
-        {% for num in page_obj.paginator.page_range %}
-            {% if num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
-                {% if num == page_obj.number %}
-                    <span class="current-page">{{ num }}</span>
-                {% else %}
-                    <a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a>
-                {% endif %}
+<div class="card shadow-sm p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        {% if request.user.is_authenticated %}
+            {% if not request.user.is_superuser %}
+                <h1 class="h3 fw-bold mb-0">{{ request.user.username }}님의 할 일 목록</h1>
+            {% else %}
+                <h1 class="h3 fw-bold mb-0">모든 할 일 목록 (관리자용)</h1>
             {% endif %}
-        {% endfor %}
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Last &raquo;</a>
+            <a href="{% url 'cbv_todo_create' %}" class="btn btn-success">새 할 일 생성</a>
         {% else %}
-            <p>Next</p>
-            <p>Last &raquo;</p>
+            <h1 class="h3 fw-bold mb-0">Todo 앱에 오신 것을 환영합니다!</h1>
         {% endif %}
     </div>
+
+    {% if request.user.is_authenticated %}
+        <form method="GET" class="mb-4">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="제목 또는 내용을 검색하세요..." name="q" value="{% if request.GET.q %}{{ request.GET.q }}{% endif %}">
+                <button class="btn btn-primary" type="submit">검색</button>
+            </div>
+        </form>
+
+        {% if page_obj.object_list %}
+            <ul class="list-group">
+                {% for todo in page_obj.object_list %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <a href="{% url 'cbv_todo_info' todo.id %}" class="text-decoration-none text-dark fw-normal">
+                            {% if request.user.is_superuser %}
+                                <span class="badge bg-info text-dark me-2">{{ todo.user.username }}</span>
+                            {% endif %}
+                            {{ todo.title }}
+                        </a>
+                        {% if todo.is_completed %}
+                            <span class="badge bg-success">완료</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">미완료</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            {% include 'todo/pagination.html' with page_obj=page_obj %}
+        {% else %}
+            <div class="alert alert-info text-center" role="alert">
+                할 일이 없습니다. 새로 추가해보세요!
+            </div>
+        {% endif %}
     {% else %}
-        <p><strong>회원가입</strong>이나 <strong>로그인</strong>을 진행해주세요.</p>
+        <div class="alert alert-warning text-center" role="alert">
+            할 일을 보려면 **회원가입**하거나 **로그인**해주세요.
+        </div>
     {% endif %}
 </div>
 {% endblock %}

@@ -1,35 +1,146 @@
 {% extends 'todo/base.html' %}
 {% load static %}
+{% load widget_tweaks %} {# form 필드에 class 추가하기 위해 필요 #}
 
-{% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/todo_info.css' %}">
-{% endblock %}
+{% block title %}Todo 상세 - {{ object.title }}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="todo-info-header">
-        <h1>
-            {% if request.user.is_superuser %}
-                [{{ todo.user.username }}]
-            {% endif %}
-            {{ todo.title }}</h1>
-        <div class="button-group-container">
-            <button class="btn-primary" onclick="location.href='{% url 'cbv_todo_update' todo.id %}'">수정하기</button>
-            <form method="POST" action="{% url 'cbv_todo_delete' todo.id %}">
-                {% csrf_token %}
-                <button class="btn-danger" type="submit">삭제하기</button>
-            </form>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h3 card-title mb-0">
+                {% if request.user.is_superuser %}
+                    <span class="badge bg-secondary me-2">[{{ object.user.username }}]</span>
+                {% endif %}
+                {{ object.title }}
+            </h1>
+            <div class="btn-group" role="group">
+                <a href="{% url 'cbv_todo_update' object.id %}" class="btn btn-primary">수정</a>
+                <form method="POST" action="{% url 'cbv_todo_delete' object.id %}" class="d-inline" onsubmit="return confirm('이 할 일을 삭제하시겠습니까?');">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">삭제</button>
+                </form>
+            </div>
         </div>
-    </div>
-    <table>
-        {% for key, value in todo.items %}
-            {% if key != 'title' and key != 'id' and key != 'user_id' and key != '_state' and key != 'user'%}
+
+        <table class="table table-bordered mb-4">
+            <tbody>
                 <tr>
-                    <th>{{ key|capfirst }}</th>
-                    <td>{{ value }}</td>
+                    <th class="bg-light w-25">설명</th>
+                    <td>{{ todo_dict.description }}</td>
                 </tr>
-            {% endif %}
-        {% endfor %}
-    </table>
+                <tr>
+                    <th class="bg-light w-25">시작일</th>
+                    <td>{{ todo_dict.start_date|date:"Y.m.d H:i"|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th class="bg-light w-25">종료일</th>
+                    <td>{{ todo_dict.end_date|date:"Y.m.d H:i"|default:"-" }}</td>
+                </tr>
+                <tr>
+                    <th class="bg-light w-25">완료 여부</th>
+                    <td>
+                        {% if todo_dict.is_completed %}
+                            <span class="badge bg-success">완료</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">미완료</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="bg-light w-25">생성일</th>
+                    <td>{{ todo_dict.created_at|date:"Y.m.d H:i" }}</td>
+                </tr>
+                <tr>
+                    <th class="bg-light w-25">수정일</th>
+                    <td>{{ todo_dict.modified_at|date:"Y.m.d H:i" }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-{% endblock %}
+
+<div class="card shadow-sm" id="comment_wrapper">
+    <div class="card-body">
+        <h2 class="h4 card-title mb-3">댓글</h2>
+        <hr>
+
+        {% if request.user.is_authenticated %}
+            {# 댓글 생성 폼 #}
+            <form method="POST" action="{% url 'comment_create' object.id %}" class="mb-4">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="{{ comment_form.message.id_for_label }}" class="form-label">{{ comment_form.message.label }}</label>
+                    {{ comment_form.message|add_class:"form-control" }}
+                    {% for error in comment_form.message.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">댓글 달기</button>
+            </form>
+        {% else %}
+            <div class="alert alert-info text-center" role="alert">
+                댓글을 작성하려면 로그인해주세요.
+            </div>
+        {% endif %}
+
+        {% if page_obj.object_list %}
+            <ul class="list-group list-group-flush mt-4">
+                {% for comment in page_obj.object_list %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0 fw-bold">{{ comment.user.username }}</h6>
+                            <small class="text-muted">{{ comment.created_at|date:"Y-m-d H:i" }}</small>
+                        </div>
+                        {# 댓글 메시지 표시 영역: 초기에는 d-none 클래스 없음 #}
+                        <p id="comment_message_{{ comment.id }}" class="card-text">{{ comment.message }}</p>
+
+                        {% if request.user == comment.user or request.user.is_superuser %}
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-sm btn-outline-secondary me-2" onclick="toggleCommentEditForm({{ comment.id }})">수정</button>
+                                {# 댓글 삭제: JavaScript confirm으로 바로 삭제 요청 #}
+                                <form method="POST" action="{% url 'comment_delete' comment.id %}" class="d-inline" onsubmit="return confirm('이 댓글을 삭제하시겠습니까?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">삭제</button>
+                                </form>
+                            </div>
+                            {# 댓글 수정 폼: 초기에는 d-none 클래스로 숨김 #}
+                            <form id="comment_edit_form_{{ comment.id }}" class="mt-3 d-none" method="POST" action="{% url 'comment_update' comment.id %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    {# Django form 필드 렌더링. comment.message를 초기값으로 사용 #}
+                                    <textarea name="message" class="form-control" rows="3" required>{{ comment.message }}</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-primary">댓글 수정 완료</button>
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="toggleCommentEditForm({{ comment.id }})">취소</button>
+                            </form>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            {% include 'todo/pagination.html' with page_obj=page_obj fragment='comment_wrapper' %}
+        {% else %}
+            <div class="alert alert-secondary mt-3 text-center" role="alert">
+                아직 댓글이 없습니다. 첫 번째 댓글을 남겨보세요!
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    function toggleCommentEditForm(commentId) {
+        const form = document.getElementById(`comment_edit_form_${commentId}`);
+        const messageDisplay = document.getElementById(`comment_message_${commentId}`);
+
+        // d-none 클래스를 토글하여 보이고 숨김
+        form.classList.toggle('d-none');
+
+        // 메시지 표시 영역도 토글
+        if (messageDisplay) {
+            messageDisplay.classList.toggle('d-none');
+        }
+    }
+</script>
+{% endblock extra_js %}
