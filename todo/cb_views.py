@@ -2,7 +2,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect, Http404
-from django.db.models import Q
+from django.db.models import Q, F # Field, F 객체: 데이터베이스 안에서 모델의 필드 값을 참조
 from todo.models import Todo, Comment
 from django.core.paginator import Paginator
 from todo.forms import CommentForm, TodoForm, TodoUpdateForm
@@ -12,17 +12,33 @@ class TodoListView(LoginRequiredMixin, ListView):
     queryset = Todo.objects.all()
     template_name = 'todo/todo_list.html'
     paginate_by = 10
-    ordering = ('-created_at',)
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(user=self.request.user)
-        if self.request.user.is_superuser:
-            queryset = super().get_queryset()
+        queryset = super().get_queryset()
+        if not self.request.user.is_superuser:
+            queryset = queryset.filter(user=self.request.user)
 
         q = self.request.GET.get('q')
         if q:
             queryset = queryset.filter(Q(title__icontains=q) | Q(description__icontains=q))
+
+        # 정렬 기능 추가
+        sort_by = self.request.GET.get('sort_by', '-created_at')  # 기본값: 최신순
+
+        # status: 상태. 미완료 우선 정렬, 그 후 최신순 정렬
+        if sort_by == 'status':
+            queryset = queryset.order_by(F('is_completed').asc(nulls_last=True), '-created_at')
+        else:
+            # 그 외: 요청된 필드명으로 정렬
+            queryset = queryset.order_by(sort_by)
+
         return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # 템플릿에 현재 정렬 상태 넘겨줌
+        context['sort_by'] = self.request.GET.get('sort_by', '-created_at')
+        return context
 
 class TodoDetailView(LoginRequiredMixin, DetailView):
     model = Todo
@@ -150,6 +166,4 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        # return reverse_lazy('cbv_todo_list') = 기본 요구사항
-        # 댓글 삭제 후 Todo 상세 페이지로 돌아가며 댓글 섹션으로 스크롤
         return reverse_lazy('cbv_todo_info', kwargs={'pk': self.object.todo.id}) + '#comment_wrapper'

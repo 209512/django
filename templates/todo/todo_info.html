@@ -1,6 +1,6 @@
 {% extends 'todo/base.html' %}
 {% load static %}
-{% load widget_tweaks %} {# form 필드에 class 추가하기 위해 필요 #}
+{% load widget_tweaks %}
 
 {% block title %}Todo 상세 - {{ object.title }}{% endblock %}
 
@@ -10,13 +10,13 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="h3 card-title mb-0">
                 {% if request.user.is_superuser %}
-                    <span class="badge bg-secondary me-2">[{{ object.user.username }}]</span>
+                    <span class="badge bg-secondary me-2">{{ object.user.username }}</span>
                 {% endif %}
                 {{ object.title }}
             </h1>
             <div class="btn-group" role="group">
                 <a href="{% url 'cbv_todo_update' object.id %}" class="btn btn-primary">수정</a>
-                <form method="POST" action="{% url 'cbv_todo_delete' object.id %}" class="d-inline" onsubmit="return confirm('이 할 일을 삭제하시겠습니까?');">
+                <form method="POST" action="{% url 'cbv_todo_delete' object.id %}" class="d-inline" onsubmit="return confirm('이 Todo를 삭제하시겠습니까?');">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger">삭제</button>
                 </form>
@@ -27,33 +27,41 @@
             <tbody>
                 <tr>
                     <th class="bg-light w-25">설명</th>
-                    <td>{{ todo_dict.description }}</td>
+                    <td>{{ object.description|safe }}</td>
                 </tr>
                 <tr>
                     <th class="bg-light w-25">시작일</th>
-                    <td>{{ todo_dict.start_date|date:"Y.m.d H:i"|default:"-" }}</td>
+                    <td>{{ object.start_date|date:"Y.m.d H:i"|default:"-" }}</td>
                 </tr>
                 <tr>
                     <th class="bg-light w-25">종료일</th>
-                    <td>{{ todo_dict.end_date|date:"Y.m.d H:i"|default:"-" }}</td>
+                    <td>{{ object.end_date|date:"Y.m.d H:i"|default:"-" }}</td>
                 </tr>
                 <tr>
                     <th class="bg-light w-25">완료 여부</th>
                     <td>
-                        {% if todo_dict.is_completed %}
+                        {% if object.is_completed %}
                             <span class="badge bg-success">완료</span>
                         {% else %}
                             <span class="badge bg-warning text-dark">미완료</span>
                         {% endif %}
                     </td>
                 </tr>
+                {% if object.completed_image %}
+                <tr>
+                    <th class="bg-light w-25">이미지</th>
+                    <td>
+                        <img src="{{ object.completed_image.url }}" alt="완료 이미지" class="img-fluid" style="max-height: 200px;">
+                    </td>
+                </tr>
+                {% endif %}
                 <tr>
                     <th class="bg-light w-25">생성일</th>
-                    <td>{{ todo_dict.created_at|date:"Y.m.d H:i" }}</td>
+                    <td>{{ object.created_at|date:"Y.m.d H:i" }}</td>
                 </tr>
                 <tr>
                     <th class="bg-light w-25">수정일</th>
-                    <td>{{ todo_dict.modified_at|date:"Y.m.d H:i" }}</td>
+                    <td>{{ object.modified_at|date:"Y.m.d H:i" }}</td>
                 </tr>
             </tbody>
         </table>
