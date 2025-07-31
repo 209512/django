@@ -1,25 +1,28 @@
 from django import forms
 from todo.models import Todo, Comment
+from django_summernote.widgets import SummernoteWidget
 
 class TodoForm(forms.ModelForm):
+    completed_image = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Todo
         fields = ['title', 'description','start_date', 'end_date', 'is_completed']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '할 일 제목'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': '자세한 내용'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '제목을 입력해주세요.'}),
+            'description': SummernoteWidget(),
             'start_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'end_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'is_completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
 class TodoUpdateForm(forms.ModelForm):
+    completed_image = forms.ImageField(required=False, widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
     class Meta:
         model = Todo
-        fields = ['title', 'description','start_date', 'end_date', 'is_completed']
+        fields = ['title', 'description','start_date', 'end_date', 'is_completed', 'completed_image']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'description': SummernoteWidget(),
             'start_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'end_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'is_completed': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
