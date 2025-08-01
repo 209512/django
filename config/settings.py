@@ -11,10 +11,17 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import json
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# 환경변수
+with open(BASE_DIR / '.secret_config' / 'secret.json') as f:
+    config_secret_str = f.read()
+
+SECRET = json.loads(config_secret_str)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -55,9 +62,9 @@ INSTALLED_APPS = DJANGO_APPS + OWN_APPS + THIRD_PARTY_APPS
 
 
 # login / logout
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/users/login/'
 LOGIN_REDIRECT_URL = '/cbv/todo/' # 로그인 후에 To Do List 페이지로 이동
-LOGOUT_REDIRECT_URL = '/accounts/login/' # 로그아웃 시 로그인 페이지로 이동
+LOGOUT_REDIRECT_URL = '/users/login/' # 로그아웃 시 로그인 페이지로 이동
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -200,3 +207,15 @@ SUMMERNOTE_CONFIG = {
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# auth
+AUTH_USER_MODEL = 'users.User'
+
+# email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = SECRET['EMAIL']['USER']
+EMAIL_HOST_PASSWORD = SECRET['EMAIL']['PASSWORD']
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
