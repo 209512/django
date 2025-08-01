@@ -1,0 +1,15 @@
+{% extends 'registration/base.html' %}
+{% block title %}이메일 인증 성공{% endblock %}
+
+{% block content %}
+<div class="alert alert-success text-center my-5 py-4 fs-5 rounded-3 shadow-sm">
+    이메일 인증이 성공적으로 완료되었습니다.<br>
+    3초 후 로그인 페이지로 이동합니다.
+</div>
+
+<script>
+    setTimeout(() => {
+        window.location.href = "{% url 'cbv_login' %}";
+    }, 3000);
+</script>
+{% endblock %}

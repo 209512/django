@@ -13,14 +13,18 @@
 │       │   └── a.jpg
 │       └── thumbnails
 │           ├── a_dJkEpq9_thumb.jpg
-│           └── a_thumb_5x5MrG3.jpg
+│           └── a_thumb_sdoMvOH.jpg
 ├── poetry.lock
 ├── project_structure.txt
 ├── pyproject.toml
 ├── templates
 │   ├── registration
+│   │   ├── base.html
 │   │   ├── login.html
-│   │   └── signup.html
+│   │   ├── signup_done.html
+│   │   ├── signup.html
+│   │   ├── verify_failed.html
+│   │   └── verify_success.html
 │   └── todo
 │       ├── base.html
 │       ├── pagination.html
@@ -38,28 +42,30 @@
 │   ├── migrations
 │   │   ├── __init__.py
 │   │   ├── 0001_initial.py
-│   │   ├── 0002_rename_is_complete_todo_is_completed_and_more.py
-│   │   ├── 0003_todo_user.py
-│   │   ├── 0004_comment.py
-│   │   ├── 0005_alter_comment_options_alter_todo_options_and_more.py
-│   │   └── 0006_todo_completed_image_todo_thumbnail.py
+│   │   └── 0002_initial.py
 │   ├── models.py
 │   ├── tests.py
 │   ├── urls.py
 │   └── views.py
-└── users
-    ├── __init__.py
-    ├── admin.py
-    ├── apps.py
-    ├── migrations
-    │   └── __init__.py
-    ├── models.py
-    ├── static
-    │   └── css
-    │       ├── base_users.css
-    │       ├── login.css
-    │       └── signup.css
-    ├── tests.py
-    └── views.py
+├── users
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── cb_views.py
+│   ├── forms.py
+│   ├── migrations
+│   │   ├── __init__.py
+│   │   └── 0001_initial.py
+│   ├── models.py
+│   ├── static
+│   │   ├── css
+│   │   │   └── bootstrap.min.css
+│   │   └── js
+│   │       └── bootstrap.bundle.min.js
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+└── utils
+    └── email.py
 
-20 directories, 64 files
+17 directories, 52 files
