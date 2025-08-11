@@ -1,5 +1,6 @@
 # restaurants/tests.py
 
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from rest_framework.test import APITestCase
 from apps.restaurants.models import Restaurant
@@ -45,6 +46,9 @@ class RestaurantViewTestCase(APITestCase):
             "last_order": "21:00:00",
             "regular_holiday": "MON"
         }
+
+        self.user = get_user_model().objects.create_user(email='test@example.com', password='password1234')
+        self.client.login(email='test@example.com', password='password1234')
 
     def test_restaurant_list_view(self):
         url = reverse('restaurant-list')

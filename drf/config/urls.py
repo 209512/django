@@ -22,5 +22,7 @@ from apps.restaurants.urls import router as restaurants_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(restaurants_router.urls)) # 추가
+    path('users/', include('apps.users.urls')),
+    path('', include(restaurants_router.urls)),
+    path('', include('apps.reviews.urls')),
 ]
