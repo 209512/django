@@ -42,7 +42,13 @@
 │   ├── __init__.py
 │   ├── asgi.py
 │   ├── models.py
-│   ├── settings.py
+│   ├── schema.py
+│   ├── settings
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── local.py
+│   │   ├── prod.py
+│   │   └── settings.py -> prod.py
 │   ├── urls.py
 │   └── wsgi.py
 ├── data
@@ -712,7 +718,6 @@
 │       │   │   ├── 827
 │       │   │   ├── 828
 │       │   │   ├── pg_filenode.map
-│       │   │   ├── pg_internal.init
 │       │   │   └── PG_VERSION
 │       │   ├── 4
 │       │   │   ├── 112
@@ -1374,8 +1379,7 @@
 │       │   ├── 6302
 │       │   ├── 6303
 │       │   ├── pg_control
-│       │   ├── pg_filenode.map
-│       │   └── pg_internal.init
+│       │   └── pg_filenode.map
 │       ├── pg_commit_ts
 │       ├── pg_dynshmem
 │       ├── pg_hba.conf
@@ -1420,4 +1424,4 @@
 ├── requirements.txt
 └── uv.lock
 
-38 directories, 1383 files
+39 directories, 1386 files

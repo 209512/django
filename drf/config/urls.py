@@ -1,3 +1,4 @@
+# config/urls.py
 """
 URL configuration for config project.
 
@@ -14,10 +15,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# config/urls.py
 
 from django.contrib import admin
 from django.urls import path, include
+from config.schema import schema_view
 from apps.restaurants.urls import router as restaurants_router
 
 urlpatterns = [
@@ -25,4 +26,9 @@ urlpatterns = [
     path('users/', include('apps.users.urls')),
     path('', include(restaurants_router.urls)),
     path('', include('apps.reviews.urls')),
+
+    # swagger
+    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]

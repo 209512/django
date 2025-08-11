@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
@@ -127,3 +128,43 @@ class UserAPITestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(User.objects.filter(email='test@example.com').exists())
+
+    def test_jwt_login(self):
+        user = User.objects.create_user(**self.data)
+        data = {
+            'email': user.email,
+            'password': 'testpassword1234'
+        }
+
+        response = self.client.post(reverse('jwt-login'), data)
+        last_login = user.last_login
+        user.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('access', response.data)
+        self.assertIn('refresh', response.data)
+        self.assertNotEqual(user.last_login, last_login)
+
+    def test_jwt_verify(self):
+        user = User.objects.create_user(**self.data)
+        refresh = RefreshToken.for_user(user)
+        access = str(refresh.access_token)
+
+        response = self.client.post(
+            path=reverse('token-verify'),
+            data={'token': access},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_jwt_refresh(self):
+        user = User.objects.create_user(**self.data)
+        refresh = RefreshToken.for_user(user)
+
+        response = self.client.post(
+            path=reverse('token-refresh'),
+            data={'refresh': str(refresh)}
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('access', response.data)

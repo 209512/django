@@ -26,7 +26,9 @@ Django==5.2.5
 django-cleanup==9.0.0
 django-extensions==4.1
 djangorestframework==3.16.1
+djangorestframework_simplejwt==5.5.1
 dnspython==2.7.0
+drf-yasg==1.21.10
 dulwich==0.22.8
 executing==2.2.0
 fastapi==0.115.12
@@ -43,6 +45,7 @@ httptools==0.6.4
 httpx==0.28.1
 identify==2.6.12
 idna==3.10
+inflection==0.5.1
 installer==0.7.0
 ipykernel==6.29.5
 ipython==9.2.0
@@ -93,6 +96,7 @@ pydantic==2.11.5
 pydantic_core==2.33.2
 pydeck==0.9.1
 Pygments==2.19.1
+PyJWT==2.10.1
 pymongo==4.13.2
 PyMySQL==1.1.1
 pyproject_hooks==1.2.0
@@ -130,6 +134,7 @@ trove-classifiers==2025.5.9.12
 typing-inspection==0.4.1
 typing_extensions==4.14.1
 tzdata==2025.2
+uritemplate==4.2.0
 urllib3==2.5.0
 uv==0.8.5
 uvicorn==0.34.2
